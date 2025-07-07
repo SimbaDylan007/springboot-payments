@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOGS_DIR" value="logs" />
+
+    <!-- Appender for Console Output -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %-5level %logger{36} - [%file:%line] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Appender for General Backend Log (Rotating File) -->
+    <appender name="BACKEND_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_DIR}/backend.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %-5level %logger{36} - [%file:%line] - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_DIR}/archived/backend.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Appender for Frontend-specific Logs (Rotating File) -->
+    <appender name="FRONTEND_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_DIR}/frontend.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %-5level %logger{36} - [%file:%line] - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_DIR}/archived/frontend.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Specific Logger for Frontend-related actions -->
+    <!-- Any logger created with name "com.yourcompany.payments.frontend" will use this -->
+    <logger name="com.yourcompany.payments.frontend" level="DEBUG" additivity="false">
+        <appender-ref ref="FRONTEND_FILE" />
+        <appender-ref ref="CONSOLE" />
+    </logger>
+
+    <!-- Configure levels for third-party libraries -->
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.hibernate" level="INFO"/>
+    <logger name="com.zaxxer.hikari" level="INFO"/>
+    <!-- Add a logger for your SOAP library if needed, similar to Zeep -->
+
+    <!-- Root Logger Configuration -->
+    <!-- All other loggers will inherit from this -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="BACKEND_FILE" />
+    </root>
+</configuration>

@@ -1,0 +1,112 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://ws.billpayment.zb.co.zw/" elementFormDefault="unqualified" targetNamespace="http://ws.billpayment.zb.co.zw/" version="1.0">
+
+    <xs:element name="postPayment" type="tns:postPayment"/>
+
+    <xs:element name="postPaymentResponse" type="tns:postPaymentResponse"/>
+
+    <xs:element name="retryPayment" type="tns:retryPayment"/>
+
+    <xs:element name="retryPaymentResponse" type="tns:retryPaymentResponse"/>
+
+    <xs:element name="reversePayment" type="tns:reversePayment"/>
+
+    <xs:element name="reversePaymentResponse" type="tns:reversePaymentResponse"/>
+
+    <xs:element name="validateCustomerAccount" type="tns:validateCustomerAccount"/>
+
+    <xs:element name="validateCustomerAccountResponse" type="tns:validateCustomerAccountResponse"/>
+
+    <xs:complexType name="postPayment">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="payment" type="tns:payment"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="payment">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="gatewayReference" type="xs:long"/>
+            <xs:element minOccurs="0" name="billerId" type="xs:string"/>
+            <xs:element minOccurs="0" name="paymentReference" type="xs:string"/>
+            <xs:element minOccurs="0" name="source" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerAccount" type="xs:string"/>
+            <xs:element name="amount" type="xs:double"/>
+            <xs:element minOccurs="0" name="customerPaymentDetails1" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerPaymentDetails2" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerPaymentDetails3" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerPaymentDetails4" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerPaymentDetails5" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerMobile" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerPrimaryAccountNumber" type="xs:string"/>
+            <xs:element minOccurs="0" name="paymentDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="status" type="xs:string"/>
+            <xs:element minOccurs="0" name="narrative" type="xs:string"/>
+            <xs:element minOccurs="0" name="currency" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerName" type="xs:string"/>
+            <xs:element minOccurs="0" name="paymentMethod" type="xs:string"/>
+            <xs:element minOccurs="0" name="paymentType" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="postPaymentResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="tns:paymentResponse"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="paymentResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="payment" type="tns:payment"/>
+            <xs:element minOccurs="0" name="receiptDetails" type="xs:string"/>
+            <xs:element minOccurs="0" name="receiptNumber" type="xs:string"/>
+            <xs:element name="successful" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="retryPayment">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="payment" type="tns:payment"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="retryPaymentResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="tns:paymentResponse"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="validateCustomerAccount">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="source" type="xs:string"/>
+            <xs:element minOccurs="0" name="billerId" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerAccount" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="validateCustomerAccountResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="tns:validationResponse"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="validationResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="billerId" type="xs:string"/>
+            <xs:element minOccurs="0" name="customerAccount" type="xs:string"/>
+            <xs:element minOccurs="0" name="responseDetails" type="xs:string"/>
+            <xs:element name="successful" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="reversePayment">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="payment" type="tns:payment"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="reversePaymentResponse">
+        <xs:sequence>
+            <xs:element minOccurs="0" name="return" type="tns:paymentResponse"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>
