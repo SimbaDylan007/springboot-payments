@@ -1,7 +1,9 @@
 package com.yourcompany.payments.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
 import com.yourcompany.payments.dto.payment.PaymentResponse;
+import com.yourcompany.payments.dto.zetdc.ZetdcValidationResponse;
 import com.yourcompany.payments.entity.User;
 import com.yourcompany.payments.service.biller.EgressPaymentService;
 import com.yourcompany.payments.wsdl.ValidateCustomerAccountResponse;
@@ -20,8 +22,8 @@ public class ZetdcController {
     private static final String BILLER_ID = "ZETDC";
 
     @GetMapping("/validate")
-    public ResponseEntity<ValidateCustomerAccountResponse> validateAccount(@RequestParam("account_number") String accountNumber) {
-        ValidateCustomerAccountResponse validationResult = egressPaymentService.validateAccount(BILLER_ID, accountNumber);
+    public ResponseEntity<ZetdcValidationResponse> validateAccount(@RequestParam("account_number") String accountNumber) throws JsonProcessingException {
+        ZetdcValidationResponse validationResult = egressPaymentService.validateZetdc(accountNumber);
         return ResponseEntity.ok(validationResult);
     }
 

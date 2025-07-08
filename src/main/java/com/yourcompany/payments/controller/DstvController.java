@@ -1,11 +1,11 @@
 package com.yourcompany.payments.controller;
 
+import com.yourcompany.payments.dto.dstv.DstvValidationResponse;
 import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
 import com.yourcompany.payments.dto.payment.PaymentResponse;
 import com.yourcompany.payments.entity.User;
 import com.yourcompany.payments.service.biller.EgressPaymentService;
 // FIX: Import the correct response class
-import com.yourcompany.payments.wsdl.ValidateCustomerAccountResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class DstvController {
     private static final String BILLER_ID = "DSTV";
 
     @GetMapping("/validate")
-    public ResponseEntity<ValidateCustomerAccountResponse> validateAccount(@RequestParam("customer_account") String customerAccount) {
-        ValidateCustomerAccountResponse validationResult = egressPaymentService.validateAccount(BILLER_ID, customerAccount);
+    public ResponseEntity<DstvValidationResponse> validateAccount(@RequestParam("customer_account") String customerAccount) {
+        DstvValidationResponse validationResult = egressPaymentService.validateDstv(customerAccount);
         return ResponseEntity.ok(validationResult);
     }
 

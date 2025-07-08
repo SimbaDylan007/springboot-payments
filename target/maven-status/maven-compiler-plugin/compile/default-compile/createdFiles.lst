@@ -11,6 +11,7 @@ com\yourcompany\payments\wsdl\PaymentResponse.class
 com\yourcompany\payments\exception\UserAlreadyExistsException.class
 com\yourcompany\payments\wsdl\ValidationResponse.class
 com\yourcompany\payments\wsdl\ValidateCustomerAccountResponse.class
+com\yourcompany\payments\dto\fml\FmlValidationResponse$FmlValidationResponseBuilder.class
 com\yourcompany\payments\dto\nyaradzo\NyaradzoValidationResponse.class
 com\yourcompany\payments\dto\auth\RegisterRequest.class
 com\yourcompany\payments\dto\TransactionRecordDto.class
@@ -54,6 +55,7 @@ com\yourcompany\payments\dto\school\SchoolType.class
 com\yourcompany\payments\repository\TransactionRepository.class
 com\yourcompany\payments\controller\SmilePayController.class
 com\yourcompany\payments\dto\cimas\CimasValidationResponse.class
+com\yourcompany\payments\dto\zetdc\ZetdcValidationResponse$ZetdcValidationResponseBuilder.class
 com\yourcompany\payments\controller\CohController.class
 com\yourcompany\payments\wsdl\Payment.class
 com\yourcompany\payments\entity\User.class
@@ -63,6 +65,8 @@ com\yourcompany\payments\controller\WebhookController.class
 com\yourcompany\payments\repository\PaymentRepository.class
 com\yourcompany\payments\PaymentsApplication.class
 com\yourcompany\payments\dto\doves\DovesValidationResponse.class
+com\yourcompany\payments\dto\dstv\DstvValidationResponse$DstvValidationResponseBuilder.class
+com\yourcompany\payments\dto\doves\DovesValidationResponse$DovesValidationResponseBuilder.class
 com\yourcompany\payments\repository\UserRepository.class
 com\yourcompany\payments\controller\NyaradzoController.class
 com\yourcompany\payments\wsdl\RetryPaymentResponse.class

@@ -1,5 +1,6 @@
 package com.yourcompany.payments.controller;
 
+import com.yourcompany.payments.dto.doves.DovesValidationResponse;
 import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
 import com.yourcompany.payments.dto.payment.PaymentResponse;
 import com.yourcompany.payments.entity.User;
@@ -22,8 +23,8 @@ public class DovesController {
 
     @GetMapping("/validate")
     // FIX: The method now returns the full response object
-    public ResponseEntity<ValidateCustomerAccountResponse> validateAccount(@RequestParam("customer_account") String customerAccount) {
-        ValidateCustomerAccountResponse validationResult = egressPaymentService.validateAccount(BILLER_ID, customerAccount);
+    public ResponseEntity<DovesValidationResponse> validateAccount(@RequestParam("customer_account") String customerAccount) {
+        DovesValidationResponse validationResult = egressPaymentService.validateDovesPolicy(customerAccount);
         return ResponseEntity.ok(validationResult);
     }
 

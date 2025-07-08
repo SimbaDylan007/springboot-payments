@@ -1,8 +1,12 @@
 package com.yourcompany.payments.dto.doves;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
+
 import java.math.BigDecimal;
 
+
+@Builder
 public record DovesValidationResponse(
         @JsonProperty("customerAccount") String customerAccount,
         @JsonProperty("customerName") String customerName,

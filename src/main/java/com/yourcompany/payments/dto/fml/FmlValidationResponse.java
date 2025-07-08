@@ -1,7 +1,9 @@
 package com.yourcompany.payments.dto.fml;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 
+@Builder
 public record FmlValidationResponse(
         @JsonProperty("customerAccount") String policyNumber,
         @JsonProperty("policy_holder") String policyHolder,

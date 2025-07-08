@@ -1,7 +1,13 @@
 package com.yourcompany.payments.service.biller;
 
 // --- Imports for DTOs and Entities ---
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yourcompany.payments.dto.TransactionRecordDto;
+import com.yourcompany.payments.dto.doves.DovesValidationResponse;
+import com.yourcompany.payments.dto.dstv.DstvValidationResponse;
+import com.yourcompany.payments.dto.fml.FmlValidationResponse;
 import com.yourcompany.payments.dto.nyaradzo.NyaradzoValidationResponse;
 import com.yourcompany.payments.dto.nyaradzo.PolicyStatus;
 import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
@@ -9,6 +15,7 @@ import com.yourcompany.payments.dto.payment.PaymentResponse;
 import com.yourcompany.payments.dto.school.SchoolType;
 import com.yourcompany.payments.dto.school.SchoolValidationResponse;
 import com.yourcompany.payments.dto.school.ZbSchoolApiResponse;
+import com.yourcompany.payments.dto.zetdc.ZetdcValidationResponse;
 import com.yourcompany.payments.entity.User;
 import com.yourcompany.payments.exception.BillerValidationException;
 import com.yourcompany.payments.exception.PaymentFailedException;
@@ -68,6 +75,12 @@ public class EgressPaymentService {
     // --- Constants ---
     private static final String WSDL_NAMESPACE_URI = "http://ws.billpayment.zb.co.zw/";
     private static final String NYARADZO_BILLER_ID = "NYARADZO";
+    private static final String DOVES_BILLER_ID = "DOVES";
+    private static final String FML_BILLER_ID = "FML";
+    private static final String DSTV_BILLER_ID = "DSTV";
+    private static final String ZETDC_BILLER_ID = "ZETDC";
+
+
 
     // ===================================================================================
     // CORE SOAP METHODS (Your existing, correct implementations)
@@ -177,6 +190,80 @@ public class EgressPaymentService {
             throw new BillerValidationException("Nyaradzo policy validation failed. Details: " + errorMessage);
         }
         return mapToNyaradzoValidationResponse(rawResponse, months);
+    }
+
+
+    public DovesValidationResponse validateDovesPolicy(String customerAccount) {
+        String validationAccountString = String.format("%s", customerAccount);
+        log.info("Initiating validation for Doves policy: {}", validationAccountString);
+        ValidateCustomerAccountResponse rawResponse = this.validateAccount(DOVES_BILLER_ID, validationAccountString);
+
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+
+        // Check for success using the 'isSuccessful()' method from the WSDL
+        if (!responseData.isSuccessful()) {
+            // The WSDL shows 'responseDetails' will contain the error message.
+            String errorMessage = responseData.getResponseDetails();
+            log.warn("Validation SOAP call failed for {}. Biller response: {}", validationAccountString, errorMessage);
+            throw new BillerValidationException("Doves policy validation failed. Details: " + errorMessage);
+        }
+        return mapToDovesValidationResponse(rawResponse);
+    }
+
+    public DstvValidationResponse validateDstv(String customerAccount) {
+        String validationAccountString = String.format("%s", customerAccount);
+        log.info("Initiating validation for Dstv: {}", validationAccountString);
+        ValidateCustomerAccountResponse rawResponse = this.validateAccount(DSTV_BILLER_ID, validationAccountString);
+
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+
+        // Check for success using the 'isSuccessful()' method from the WSDL
+        if (!responseData.isSuccessful()) {
+            // The WSDL shows 'responseDetails' will contain the error message.
+            String errorMessage = responseData.getResponseDetails();
+            log.warn("Validation SOAP call failed for {}. Biller response: {}", validationAccountString, errorMessage);
+            throw new BillerValidationException("DSTV validation failed. Details: " + errorMessage);
+        }
+        return mapToDstvValidationResponse(rawResponse);
+    }
+
+
+    public FmlValidationResponse validateFMLPolicy(String customerAccount) throws JsonProcessingException {
+        String validationAccountString = String.format("%s", customerAccount);
+        log.info("Initiating validation for FML policy: {}", validationAccountString);
+        ValidateCustomerAccountResponse rawResponse = this.validateAccount(FML_BILLER_ID, validationAccountString);
+
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+
+        // Check for success using the 'isSuccessful()' method from the WSDL
+        if (!responseData.isSuccessful()) {
+            // The WSDL shows 'responseDetails' will contain the error message.
+            String errorMessage = responseData.getResponseDetails();
+            log.warn("Validation SOAP call failed for {}. Biller response: {}", validationAccountString, errorMessage);
+            throw new BillerValidationException("FML policy validation failed. Details: " + errorMessage);
+        }
+        return mapToFMLValidationResponse(rawResponse);
+    }
+
+    public ZetdcValidationResponse validateZetdc(String customerAccount) throws JsonProcessingException {
+        String validationAccountString = String.format("%s", customerAccount);
+        log.info("Initiating validation for Zetdc: {}", validationAccountString);
+        ValidateCustomerAccountResponse rawResponse = this.validateAccount(ZETDC_BILLER_ID, validationAccountString);
+
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+
+        // Check for success using the 'isSuccessful()' method from the WSDL
+        if (!responseData.isSuccessful()) {
+            // The WSDL shows 'responseDetails' will contain the error message.
+            String errorMessage = responseData.getResponseDetails();
+            log.warn("Validation SOAP call failed for {}. Biller response: {}", validationAccountString, errorMessage);
+            throw new BillerValidationException("Zetdc validation failed. Details: " + errorMessage);
+        }
+        return mapToZetdcValidationResponse(rawResponse);
     }
 
     public PaymentResponse postNyaradzoPayment(PaymentCreateRequest payment, UUID userUuid) {
@@ -314,18 +401,8 @@ public class EgressPaymentService {
     }
 
     private NyaradzoValidationResponse mapToNyaradzoValidationResponse(ValidateCustomerAccountResponse rawResponse, int months) {
-        // Get the ValidationResponse object.
         ValidationResponse responseData = rawResponse.getReturn();
         String[] details = responseData.getResponseDetails().split("\\|");
-
-        // Based on the log: Sam Doe|5.0|5.0|USD|1|SCPK1111|ACTIVE|2024-11-07|5.0|NY1111|200
-        // Corrected indices based on the provided log format
-        // details[0] = Sam Doe (policyHolder)
-        // details[1] = 5.0 (monthlyPremium)
-        // details[2] = 5.0 (amountDue)
-        // details[3] = USD (currency)
-        // details[6] = ACTIVE (policyStatus)
-        // policyNumber can come from getCustomerAccount() or details[5]
 
         PolicyStatus status = Arrays.stream(PolicyStatus.values())
                 .filter(s -> s.getValue().equalsIgnoreCase(details[6])) // Correct index for status
@@ -342,6 +419,71 @@ public class EgressPaymentService {
                 .monthlyPremium(new BigDecimal(details[1])) // Correct index for monthly premium
                 .amountDue(new BigDecimal(details[2])) // Correct index for amount due
                 .currency(details[3]) // Correct index for currency
+                .build();
+    }
+
+    private DovesValidationResponse mapToDovesValidationResponse(ValidateCustomerAccountResponse rawResponse) {
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+        String[] details = responseData.getResponseDetails().split("\\|");
+
+        return DovesValidationResponse.builder()
+                .customerAccount(rawResponse.getReturn().getCustomerAccount())
+                .customerName(details[0])
+                .premiumAmount(new BigDecimal(details[1]))
+                .isActive(Boolean.parseBoolean(details[2]))
+                .status(details[3])
+                .successful(true)
+                .error("success")
+                .build();
+    }
+
+    private FmlValidationResponse mapToFMLValidationResponse(ValidateCustomerAccountResponse rawResponse) throws JsonProcessingException {
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+        String details = responseData.getResponseDetails();
+
+        ObjectMapper mapper = new ObjectMapper();
+
+        JsonNode node = mapper.readTree(details);
+
+        return FmlValidationResponse.builder()
+                .policyNumber(rawResponse.getReturn().getCustomerAccount())
+                .policyHolder(String.valueOf(node.get("data").get("name")))
+                .policyStatus(String.valueOf(node.get("data").get("status")))
+                .successful(true)
+                .error(String.valueOf(node.get("description")))
+                .build();
+    }
+
+    private DstvValidationResponse mapToDstvValidationResponse(ValidateCustomerAccountResponse rawResponse) {
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+        String[] details = responseData.getResponseDetails().split("\\|");
+
+        return DstvValidationResponse.builder()
+                .accountNumber(rawResponse.getReturn().getCustomerAccount())
+                .customerName(details[1])
+                .dueDate(details[4])
+                .dueAmount(details[3])
+                .currency(details[2])
+                .successful(true)
+                .error("success")
+                .build();
+    }
+
+    private ZetdcValidationResponse mapToZetdcValidationResponse(ValidateCustomerAccountResponse rawResponse) {
+        // Get the ValidationResponse object.
+        ValidationResponse responseData = rawResponse.getReturn();
+        String[] details = responseData.getResponseDetails().split("\\|");
+
+        return ZetdcValidationResponse.builder()
+                .accountNumber(rawResponse.getReturn().getCustomerAccount())
+                .customerName(details[1])
+                .address(details[2]+" "+details[3]+" "+details[4])
+                .currency(details[5])
+                .successful(true)
+                .error("success")
                 .build();
     }
 
