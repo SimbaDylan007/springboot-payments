@@ -4,6 +4,8 @@ import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
 import com.yourcompany.payments.dto.payment.PaymentResponse;
 import com.yourcompany.payments.entity.User;
 import com.yourcompany.payments.service.biller.EgressPaymentService;
+// FIX: Import the correct response class, just like in DovesController
+import com.yourcompany.payments.wsdl.ValidateCustomerAccountResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +21,10 @@ public class CimasController {
     private static final String BILLER_ID = "CIMAS";
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateAccount(@RequestParam("customer_account") String customerAccount) {
-        // TODO: Call a specific validation method in EgressPaymentService
-        // Map<String, Object> result = egressPaymentService.validateCimasAccount(customerAccount);
-        // return ResponseEntity.ok(result);
-        return ResponseEntity.ok("Validation endpoint not yet implemented.");
+    // FIX: Changed return type from ResponseEntity<?> to the specific response object
+    public ResponseEntity<ValidateCustomerAccountResponse> validateAccount(@RequestParam("customer_account") String customerAccount) {
+        ValidateCustomerAccountResponse validationResult = egressPaymentService.validateAccount(BILLER_ID, customerAccount);
+        return ResponseEntity.ok(validationResult);
     }
 
     @PostMapping("/pay")
@@ -35,6 +36,7 @@ public class CimasController {
             throw new IllegalArgumentException("Invalid billerId for this endpoint.");
         }
 
+        // This Cimas-specific validation is preserved
         if (!"M".equals(payment.customerPaymentDetails2()) && !"E".equals(payment.customerPaymentDetails2())) {
             throw new IllegalArgumentException("customerPaymentDetails2 must be either 'M' (Member) or 'E' (Payer)");
         }

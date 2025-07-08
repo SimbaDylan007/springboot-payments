@@ -1,15 +1,17 @@
 package com.yourcompany.payments.controller;
 
+import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
+import com.yourcompany.payments.dto.payment.PaymentResponse;
 import com.yourcompany.payments.entity.User;
 import com.yourcompany.payments.service.biller.EgressPaymentService;
+import com.yourcompany.payments.wsdl.ValidateCustomerAccountResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
-import com.yourcompany.payments.dto.payment.PaymentResponse;
 
 @RestController
 @RequestMapping("/api/v1/coh")
@@ -20,9 +22,9 @@ public class CohController {
     private static final String BILLER_ID = "COH";
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateAccount(@RequestParam("customer_account") String customerAccount) {
-        // TODO: Call validation method in EgressPaymentService
-        return ResponseEntity.ok("Validation endpoint not yet implemented.");
+    public ResponseEntity<ValidateCustomerAccountResponse> validateAccount(@RequestParam("customer_account") String customerAccount) {
+        ValidateCustomerAccountResponse validationResult = egressPaymentService.validateAccount(BILLER_ID, customerAccount);
+        return ResponseEntity.ok(validationResult);
     }
 
     @PostMapping("/pay")
@@ -34,6 +36,7 @@ public class CohController {
             throw new IllegalArgumentException("Invalid billerId for this endpoint.");
         }
 
+        // This COH-specific validation is preserved
         List<String> validMethods = List.of("ATM", "BATCH", "INTERNET", "MOBILE", "POS", "OTHER");
         if (!validMethods.contains(payment.customerPaymentDetails1())) {
             throw new IllegalArgumentException("customerPaymentDetails1 must be one of: " + String.join(", ", validMethods));

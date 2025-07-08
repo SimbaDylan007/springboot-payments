@@ -1,18 +1,35 @@
 package com.yourcompany.payments.dto.school;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
+import lombok.Builder;
+import lombok.Data;
 
-public record SchoolValidationResponse(
-        @JsonProperty("student_id") String studentId,
-        @JsonProperty("student_name") String studentName,
-        String grade,
-        String term,
-        @JsonProperty("fee_amount") BigDecimal feeAmount,
-        String currency,
-        @JsonProperty("outstanding_balance") BigDecimal outstandingBalance,
-        boolean successful,
-        String error,
-        String schoolName,
-        String accountNumber
-) {}
+@Data
+@Builder // Using Builder pattern for easy construction
+public class SchoolValidationResponse {
+    @JsonProperty("student_id")
+    private String studentId;
+
+    @JsonProperty("student_name")
+    private String studentName;
+
+    private String grade;
+    private String term;
+
+    @JsonProperty("fee_amount")
+    private double feeAmount;
+
+    private String currency;
+
+    @JsonProperty("outstanding_balance")
+    private double outstandingBalance;
+
+    private boolean successful;
+    private String error;
+
+    @JsonProperty("schoolName")
+    private String schoolName;
+
+    @JsonProperty("accountNumber")
+    private String accountNumber;
+}

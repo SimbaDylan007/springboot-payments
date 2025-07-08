@@ -3,8 +3,10 @@ com\yourcompany\payments\dto\transaction\TransactionResponse.class
 com\yourcompany\payments\dto\smilepay\PaymentInitiateResponse.class
 com\yourcompany\payments\wsdl\ObjectFactory.class
 com\yourcompany\payments\dto\auth\LoginRequest.class
+com\yourcompany\payments\dto\school\ZbSchoolApiResponse.class
 com\yourcompany\payments\wsdl\ValidateCustomerAccount.class
 com\yourcompany\payments\dto\fml\FmlValidationResponse.class
+com\yourcompany\payments\dto\school\SchoolValidationResponse$SchoolValidationResponseBuilder.class
 com\yourcompany\payments\wsdl\PaymentResponse.class
 com\yourcompany\payments\exception\UserAlreadyExistsException.class
 com\yourcompany\payments\wsdl\ValidationResponse.class
@@ -30,6 +32,9 @@ com\yourcompany\payments\service\WebhookService.class
 com\yourcompany\payments\entity\Payment.class
 com\yourcompany\payments\controller\ZetdcController.class
 com\yourcompany\payments\controller\DovesController.class
+com\yourcompany\payments\converters\StringToSchoolTypeConverter.class
+com\yourcompany\payments\exception\BillerValidationException.class
+com\yourcompany\payments\dto\nyaradzo\NyaradzoValidationResponse$NyaradzoValidationResponseBuilder.class
 com\yourcompany\payments\service\auth\AuthenticationService.class
 com\yourcompany\payments\config\ApplicationConfig.class
 com\yourcompany\payments\dto\payment\PaymentResponse.class
@@ -38,12 +43,14 @@ com\yourcompany\payments\wsdl\PostPaymentResponse.class
 com\yourcompany\payments\exception\PaymentFailedException.class
 com\yourcompany\payments\service\biller\EgressPaymentService.class
 com\yourcompany\payments\wsdl\package-info.class
+com\yourcompany\payments\dto\school\ZbSchoolApiResponse$Body.class
 com\yourcompany\payments\config\AppConfig.class
 com\yourcompany\payments\controller\CimasController.class
 com\yourcompany\payments\wsdl\PostPayment.class
 com\yourcompany\payments\dto\payment\PaymentCreateRequest.class
 com\yourcompany\payments\controller\DstvController.class
 com\yourcompany\payments\controller\FmlController.class
+com\yourcompany\payments\dto\school\SchoolType.class
 com\yourcompany\payments\repository\TransactionRepository.class
 com\yourcompany\payments\controller\SmilePayController.class
 com\yourcompany\payments\dto\cimas\CimasValidationResponse.class
@@ -64,4 +71,5 @@ com\yourcompany\payments\dto\school\SchoolValidationResponse.class
 com\yourcompany\payments\exception\GlobalExceptionHandler.class
 com\yourcompany\payments\dto\auth\TokenResponse.class
 com\yourcompany\payments\dto\coh\CohValidationResponse.class
+com\yourcompany\payments\dto\nyaradzo\PolicyStatus.class
 com\yourcompany\payments\config\properties\JwtProperties.class

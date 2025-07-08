@@ -4,6 +4,7 @@ import com.yourcompany.payments.dto.payment.PaymentCreateRequest;
 import com.yourcompany.payments.dto.payment.PaymentResponse;
 import com.yourcompany.payments.entity.User;
 import com.yourcompany.payments.service.biller.EgressPaymentService;
+import com.yourcompany.payments.wsdl.ValidateCustomerAccountResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,9 @@ public class ZetdcController {
     private static final String BILLER_ID = "ZETDC";
 
     @GetMapping("/validate")
-    public ResponseEntity<?> validateAccount(@RequestParam("account_number") String accountNumber) {
-        // TODO: Call validation method in EgressPaymentService
-        return ResponseEntity.ok("Validation endpoint not yet implemented.");
+    public ResponseEntity<ValidateCustomerAccountResponse> validateAccount(@RequestParam("account_number") String accountNumber) {
+        ValidateCustomerAccountResponse validationResult = egressPaymentService.validateAccount(BILLER_ID, accountNumber);
+        return ResponseEntity.ok(validationResult);
     }
 
     @PostMapping("/pay")
